@@ -138,5 +138,35 @@ public class MetroDAO {
 			throw new RuntimeException("Errore DB", e) ;
 		}
 	}
+	
+	public Fermata getFermata(String f) {
+		
+		final String sql = "SELECT id_fermata, nome, coordx, coordy FROM fermata where nome=?";
+		Fermata fermata = new Fermata(-1,null,null);
+
+		try {
+			Connection conn = DBConnect.getConnection();
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setString(1, f);
+			ResultSet rs = st.executeQuery();
+
+			while (rs.next()) {
+				Fermata p = new Fermata(rs.getInt("id_Fermata"), rs.getString("nome"),
+						new LatLng(rs.getDouble("coordx"), rs.getDouble("coordy")));
+				return p;
+			}
+
+			st.close();
+			conn.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Errore di connessione al Database.");
+		}
+
+		return null;
+		
+		
+	}
 
 }
